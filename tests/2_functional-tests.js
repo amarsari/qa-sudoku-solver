@@ -77,6 +77,7 @@ suite('Functional Tests', () => {
             });
     });
     //Check a puzzle placement with single placement conflict: POST request to /api/check
+    //Problems at this point. Review code.
     test('Check a puzzle placement with single placement conflict: POST request to /api/check', (done) => {
         chai.request(server)
             .post('/api/check')

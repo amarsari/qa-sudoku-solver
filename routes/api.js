@@ -35,13 +35,13 @@ module.exports = function (app) {
         return;
       }
       
-      /*
+      
       let index = (solver.letterToNumber(row) - 1) * 9 + (parseInt(+column) - 1);
       if (puzzle[index] == value) {
         res.json({ valid: true });
         return;
       }
-        */
+        
 
       let validCol = solver.checkColPlacement(puzzle, row, column, value);
       let validRegion = solver.checkRegionPlacement(puzzle, row, column, value);
