@@ -18,21 +18,30 @@ module.exports = function (app) {
         return;
       }
 
-      const row = coordinate.split('')[0];
-      const column = coordinate.split('')[1];
-      if (coordinate.length !== 2 || !/[a-i]/i.test(row) || !/[1-9]/i.test(column)) {
-        res.json({ error: 'Invalid coordinate' });
-        return;
-      }
+    if (typeof coordinate !== 'string' || coordinate.length !== 2) {
+      res.json({ error: 'Invalid coordinate' });
+      return;
+    }
+
+    const row = coordinate[0];
+    const column = coordinate[1];
+
+    if (!/^[A-Ia-i]$/.test(row) || !/^[1-9]$/.test(column)) {
+      res.json({ error: 'Invalid coordinate' });
+      return;
+    }
       if(!/^[1-9]$/.test(value)){
         res.json({ error: 'Invalid value' });
         return;
       }
+      
+      /*
       let index = (solver.letterToNumber(row) - 1) * 9 + (parseInt(+column) - 1);
       if (puzzle[index] == value) {
         res.json({ valid: true });
         return;
       }
+        */
 
       let validCol = solver.checkColPlacement(puzzle, row, column, value);
       let validRegion = solver.checkRegionPlacement(puzzle, row, column, value);
