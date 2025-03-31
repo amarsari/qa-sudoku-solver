@@ -10,6 +10,8 @@ let validPuzzle = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1
 
 let validCompletePuzzle = '827549163531672894649831527496157382218396475753284916962415738185763249374928651';
 let invalidPuzzle = '82..4..6...16..89...98314.749.157.............53..4...96.415..81..7632..3...28.51';
+let invalidPuzzleChar = '82..4..6...16..89...98314.749.157.............53..4...96.415..81..7632..3...28.5a';
+let invalidPuzzleLength = '82..4..6...16..89...98314.749.157.............53..4...96.415..81..7632..3...28.512';
 
 
 suite('Functional Tests', () => {
@@ -90,6 +92,83 @@ suite('Functional Tests', () => {
                
                 assert.equal(res.body.valid, false);
                 assert.equal(res.body.conflict.length, 1);
+                done();
+            });
+    });
+    //Check a puzzle placement with multiple placement conflicts: POST request to /api/check
+    test('Check a puzzle placement with multiple placement conflicts: POST request to /api/check', (done) => {
+        chai.request(server)
+            .post('/api/check')
+            .send( {puzzle: validPuzzle, coordinate: "A1", value: 4 })
+            .end((_, res) => {
+                assert.equal(res.status, 200);
+                assert.equal(res.body.valid, false);
+                done();
+            });
+    });
+    //Check a puzzle placement with all placement conflicts: POST request to /api/check
+    test('Check a puzzle placement with all placement conflicts: POST request to /api/check', (done) => {
+        chai.request(server)
+            .post('/api/check')
+            .send({ puzzle: validPuzzle, coordinate: "A1", value: 5 })
+            .end((_, res) => {
+                assert.equal(res.status, 200);
+                assert.equal(res.body.valid, false);
+                done();
+            });
+    });
+    //Check a puzzle placement with missing required fields: POST request to /api/check
+    test('Check a puzzle placement with missing required fields: POST request to /api/check', (done) => {
+        chai.request(server)
+            .post('/api/check')
+            .send({ coordinates: "A1", value: 6 })
+            .end((_, res) => {
+                assert.equal(res.status, 200);
+                assert.equal(res.body.error, 'Required field(s) missing');
+                done();
+            });
+    });
+    //Check a puzzle placement with invalid characters: POST request to /api/check
+    test('Check a puzzle placement with invalid characters: POST request to /api/check', (done) => {
+        chai.request(server)
+            .post('/api/check')
+            .send({ puzzle: invalidPuzzleChar, coordinate: "A3", value: 8})
+            .end((_, res) => {
+                assert.equal(res.status, 200);
+                assert.equal(res.body.error, 'Invalid characters in puzzle');
+                done();
+            });
+    });
+    //Check a puzzle placement with incorrect length: POST request to /api/check
+    test('Check a puzzle placement with incorrect length: POST request to /api/check', (done) => {
+        chai.request(server)
+            .post('/api/check')
+            .send({ puzzle: invalidPuzzleLength, coordinate: "A3", value: 8})
+            .end((_, res) => {
+                assert.equal(res.status, 200);
+                assert.equal(res.body.error, 'Expected puzzle to be 81 characters long');
+                done();
+            });
+    });
+    //Check a puzzle placement with invalid placement coordinate: POST request to /api/check
+    test('Check a puzzle placement with invalid placement coordinate: POST request to /api/check', (done) => {
+        chai.request(server)
+            .post('/api/check')
+            .send({ puzzle: validPuzzle, coordinate: "J2", value: 9})
+            .end((_, res) => {
+                assert.equal(res.status, 200);
+                assert.equal(res.body.error, 'Invalid coordinate');
+                done();
+            });
+    });
+    //Check a puzzle placement with invalid placement value: POST request to /api/check
+    test('Check a puzzle placement with invalid placement value: POST request to /api/check', (done) =>{
+        chai.request(server)
+            .post('/api/check')
+            .send({puzzle: "..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..", coordinate: "A3", value: "a"})
+            .end((_, res) => {
+                assert.equal(res.status, 200);
+                assert.equal(res.body.error, 'Invalid value');
                 done();
             });
     });
