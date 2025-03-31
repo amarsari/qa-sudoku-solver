@@ -5,7 +5,10 @@ const server = require('../server');
 
 chai.use(chaiHttp);
 
-let validPuzzle = '82..4..6...16..89...98315.749.157.............53..4...96.415..81..7632..3...28.51';
+//let validPuzzle = '82..4..6...16..89...98315.749.157.............53..4...96.415..81..7632..3...28.51';
+let validPuzzle = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..';
+
+let validCompletePuzzle = '827549163531672894649831527496157382218396475753284916962415738185763249374928651';
 let invalidPuzzle = '82..4..6...16..89...98314.749.157.............53..4...96.415..81..7632..3...28.51';
 
 
@@ -69,7 +72,7 @@ suite('Functional Tests', () => {
     test('Check a puzzle placement with all fields: POST request to /api/check', (done) => {
         chai.request(server)
             .post('/api/check')
-            .send({ puzzle: validPuzzle, coordinate: "A2", value: "3" })
+            .send({ puzzle: "..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..", coordinate: "A1", value: "7" })
             .end((_, res) => {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.valid, true);
@@ -77,18 +80,13 @@ suite('Functional Tests', () => {
             });
     });
     //Check a puzzle placement with single placement conflict: POST request to /api/check
-    //Problems at this point. Review code.
     test('Check a puzzle placement with single placement conflict: POST request to /api/check', (done) => {
         chai.request(server)
             .post('/api/check')
-            .send({ puzzle: "82..4..6...16..89...98315.749.157.............53..4...96.415..81..7632..3...28.51", 
-                coordinate: "A1", value: "8" })
+            .send({ puzzle: validPuzzle, 
+                coordinate: "A3", value: 8 })
             .end((_, res) => {
                 assert.equal(res.status, 200);
-
-                console.log(`Res. Body Value: ${res.body.value}`);
-                console.log(`Res. Body Valid: ${res.body.valid}`);
-                console.log(`Res. Body Error: ${res.body.error}`);
                
                 assert.equal(res.body.valid, false);
                 assert.equal(res.body.conflict.length, 1);

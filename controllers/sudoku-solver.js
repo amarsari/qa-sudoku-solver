@@ -1,31 +1,51 @@
+const WIDTH = 9;
+const HEIGHT = 9;
+
 class SudokuSolver {
+  constructor() {
+    this._puzzle = [];
+    this._recursions = 0;
+  }
+
+  validInput(input) {
+    return typeof input === 'string' && input.length === 1 && !!input.match(/[1-9]/);
+  }
 
   validate(puzzle) {
-    if(!puzzle) {
+    if (!puzzle) {
       return { error: 'Required field missing' };
     }
-    if(puzzle.length !== 81) {
+    if (puzzle.length !== 81) {
       return { error: 'Expected puzzle to be 81 characters long' };
     }
-    if(!/^[1-9.]+$/.test(puzzle)) {
+    if (!/^[1-9.]+$/.test(puzzle)) {
       return { error: 'Invalid characters in puzzle' };
     }
-    return "Valid";
+    return 'Valid';
   }
-  
+
   letterToNumber(row) {
-    row = row.toUpperCase(); // Convert to uppercase
-    switch (row) { // Added parentheses to call toUpperCase()
-      case 'A': return 1;
-      case 'B': return 2;
-      case 'C': return 3;
-      case 'D': return 4;
-      case 'E': return 5;
-      case 'F': return 6;
-      case 'G': return 7;
-      case 'H': return 8;
-      case 'I': return 9;
-      default: return null; // Invalid letter
+    switch (row.toUpperCase()) { // Corrected: added toUpperCase()
+      case 'A':
+        return 1;
+      case 'B':
+        return 2;
+      case 'C':
+        return 3;
+      case 'D':
+        return 4;
+      case 'E':
+        return 5;
+      case 'F':
+        return 6;
+      case 'G':
+        return 7;
+      case 'H':
+        return 8;
+      case 'I':
+        return 9;
+      default:
+        return null; // Invalid letter
     }
   }
 
@@ -33,25 +53,20 @@ class SudokuSolver {
     const SIZE = 9;
     const grid = [];
     for (let i = 0; i < SIZE; i++) {
-      grid.push(puzzleString.slice(i * SIZE, (i + 1) * SIZE).split('').map(char => (char === '.' ? 0 : parseInt(char))));
+      grid.push(
+        puzzleString
+          .slice(i * SIZE, (i + 1) * SIZE)
+          .split('')
+          .map((char) => (char === '.' ? 0 : parseInt(char)))
+      );
     }
     return grid;
   }
 
   checkRowPlacement(puzzleString, row, column, value) {
-    //begin of validation
-    let grid = puzzleString.match(/.{1,9}/g); // Split puzzle into rows
-        
-    if(!grid) {
-      return false;
-    }
-    
-    //end of validation
-
-    grid = this.transform(puzzleString); // Convert puzzle string to 2D grid
+    let grid = this.transform(puzzleString);
     row = this.letterToNumber(row) - 1;
-    
-   
+
     for (let i = 0; i < 9; i++) {
       if (grid[row][i] === value) {
         return false;
@@ -61,10 +76,10 @@ class SudokuSolver {
   }
 
   checkColPlacement(puzzleString, row, column, value) {
-    let grid = this.transform(puzzleString); // Convert puzzle string to 2D grid
+    let grid = this.transform(puzzleString);
     column = parseInt(column) - 1;
     row = this.letterToNumber(row) - 1;
-    
+
     for (let i = 0; i < 9; i++) {
       if (grid[i][column] === value) {
         return false;
@@ -74,9 +89,9 @@ class SudokuSolver {
   }
 
   checkRegionPlacement(puzzleString, row, column, value) {
-    let grid = this.transform(puzzleString); // Convert puzzle string to 2D grid
-    row = this.letterToNumber(row);
-    column = parseInt(column);
+    let grid = this.transform(puzzleString);
+    row = this.letterToNumber(row) - 1; // Corrected: subtract 1
+    column = parseInt(column) - 1; // Corrected: subtract 1
 
     let startRow = row - (row % 3);
     let startCol = column - (column % 3);
@@ -91,16 +106,13 @@ class SudokuSolver {
   }
 
   solve(puzzleString) {
-     // Check for invalid characters
-     if (!/^[1-9.]+$/.test(puzzleString)) {
-        return false;
+    if (!/^[1-9.]+$/.test(puzzleString)) {
+      return false;
     }
 
-    // Ensure the puzzle is 81 characters long
     if (puzzleString.length !== 81) {
-        return false;
+      return false;
     }
-
 
     const SIZE = 9;
     const SUBGRID = 3;
@@ -148,12 +160,8 @@ class SudokuSolver {
       return false;
     }
 
-    return board.map(row => row.join('')).join('');
-    
+    return board.map((row) => row.join('')).join('');
   }
-
-  
 }
 
 module.exports = SudokuSolver;
-
