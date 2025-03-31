@@ -33,7 +33,8 @@ suite('Functional Tests', () => {
             .send({})
             .end((_, res) => {
                 assert.equal(res.status, 200);
-                assert.deepEqual(res.body.error, { error: 'Required field missing' });
+               // assert.deepEqual(res.body.error, { error: 'Required field missing' });
+               assert.equal(res.body.error, 'Required field missing');
                 done();
             });
     });
@@ -44,7 +45,8 @@ suite('Functional Tests', () => {
             .send({ puzzle: '82..4..6...16..89...98315.749.157.............53..4...96.415..81..7632..3...28.5a' })
             .end((_, res) => {
                 assert.equal(res.status, 200);
-                assert.deepEqual(res.body.error, { error: 'Invalid characters in puzzle' });
+                //assert.deepEqual(res.body.error, { error: 'Invalid characters in puzzle' });
+                assert.equal(res.body.error, 'Invalid characters in puzzle');
                 done();
             });
     });
@@ -55,7 +57,8 @@ suite('Functional Tests', () => {
             .send({ puzzle: '5..91372.3...8.5.9.9.25..8.68.47.23...95..46.7.4.....5.2.......4..8916..85.7...3' })
             .end((_, res) => {
                 assert.equal(res.status, 200);
-                assert.deepEqual(res.body.error, { error: 'Expected puzzle to be 81 characters long' })
+                //assert.deepEqual(res.body.error, { error: 'Expected puzzle to be 81 characters long' })
+                assert.equal(res.body.error, 'Expected puzzle to be 81 characters long');
                 done();
             });
     });

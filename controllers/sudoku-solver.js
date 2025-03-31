@@ -14,11 +14,13 @@ class SudokuSolver {
   validate(puzzle) {
     if (!puzzle) {
       return { error: 'Required field missing' };
+      //return res.json({ error: 'Required field missing' });
     }
     if (puzzle.length !== 81) {
       return { error: 'Expected puzzle to be 81 characters long' };
     }
     if (!/^[1-9.]+$/.test(puzzle)) {
+      //res.json({ error: 'Invalid characters in puzzle' });
       return { error: 'Invalid characters in puzzle' };
     }
     return 'Valid';

@@ -8,6 +8,8 @@ module.exports = function (app) {
 
   app.route('/api/check').post((req, res) => {
     const { puzzle, coordinate, value } = req.body;
+    
+    
     if (!puzzle || !coordinate || !value) {
       return res.json({ error: 'Required field(s) missing' });
     }
@@ -61,6 +63,21 @@ module.exports = function (app) {
     
   app.route('/api/solve')
     .post((req, res) => {
+      //added this to try to pass test # 3
+      if (!req.body.puzzle) {
+        return res.json({ error: 'Required field missing' });
+      }
+
+      if (!/^[1-9.]+$/.test(req.body.puzzle)) {
+        return res.json({ error: 'Invalid characters in puzzle' });
+        //return { error: 'Invalid characters in puzzle' };
+      }
+
+      if (req.body.puzzle.length !== 81) {
+        return res.json({ error: 'Expected puzzle to be 81 characters long' })
+        //return { error: 'Expected puzzle to be 81 characters long' };
+      }
+
        const puzzle = req.body.puzzle;
        if(solver.validate(puzzle) !== "Valid" ){
         res.json({ error: solver.validate(puzzle) });
